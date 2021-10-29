@@ -22,8 +22,6 @@ import org.openqa.selenium.JavascriptExecutor;
 
 public class testetorra {
 	WebDriver driver;
-	
-	
 	@Before
 	public void iniciarDriver() {
 		WebDriverManager.chromiumdriver().setup();
@@ -88,6 +86,7 @@ public class testetorra {
 
 	@Test
 	public void ct03() throws InterruptedException { //Filtrar por “Marca” de calçados.
+		String termoDeFiltro = "activitta";
 		
 		WebElement calcadosCateg = driver.findElement(By.id("ihttps://torratorra.vteximg.com.br/arquivos/ids/445634/Calç2.png?v=637689555713600000"));
 		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", calcadosCateg);Thread.sleep(500);
@@ -97,8 +96,22 @@ public class testetorra {
 		driver.findElement(By.xpath("//span[@class='listFilter listFilterH5 Hide HideMarca Marca']//div[@class='btFilter']")).click();
 		Thread.sleep(100);
 		driver.findElement(By.xpath("//a[@title='Activitta']")).click();
+		
+		String resultadoFiltroMarca = driver.findElement(By.className("last")).getText();
+		resultadoFiltroMarca = resultadoFiltroMarca.toLowerCase();
+		boolean resultadoTeste;
+		
+		if(resultadoFiltroMarca.contains(termoDeFiltro)) {
+			System.out.println("Teste OK");
+			System.out.println("O resultado encontrado foi: " + resultadoFiltroMarca);
+			resultadoTeste = true;
+		} else {
+			System.out.println("Erro na busca");
+			System.out.println("O resultado encontrado foi: " + resultadoFiltroMarca);
+			resultadoTeste = false;
+		}
+		Assert.assertTrue(resultadoTeste);	
 	}
-
 	
 	@Test
 	public void ct04() throws InterruptedException { //Enviar produto para “Minha Sacola”.
@@ -109,20 +122,16 @@ public class testetorra {
 		WebElement escolherItem = 
 				driver.findElement(By.name("'Camiseta Manga Curta Estampa Animes Cinza Claro\n'"));
 			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", escolherItem);Thread.sleep(500);
-			escolherItem.click();
-		
+			escolherItem.click();	
 	}
 	
 	@Test
-	public void ct05() throws InterruptedException { //Login de usuário inválido.
-		WebDriverWait wait = 
-				new WebDriverWait(driver,10);
-		WebElement loginUsuario = 
-				driver.findElement(By.id("login"));
+	public void ct05() throws InterruptedException { //Login de usuário inválido.		
+		WebDriverWait wait = new WebDriverWait(driver,10);
+		WebElement loginUsuario = driver.findElement(By.id("login"));
 		loginUsuario.click();
-			wait.until(ExpectedConditions.presenceOfElementLocated(By.id("vtexIdContainer")));
-		WebElement entrarUsuario = 
-				driver.findElement(By.id("loginWithUserAndPasswordBtn"));
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("vtexIdContainer")));
+		WebElement entrarUsuario = driver.findElement(By.id("loginWithUserAndPasswordBtn"));
 		entrarUsuario.click();
 		Thread.sleep(500);
 		driver.findElement(By.id("inputEmail")).sendKeys("teste@teste.teste");
@@ -150,7 +159,7 @@ public class testetorra {
 	
 	@After
 	public void encerrarDriver() {
-		driver.close();
-		driver.quit();
+		//driver.close();
+		//driver.quit();
 	}
 }
