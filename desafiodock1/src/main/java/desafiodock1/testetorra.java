@@ -159,7 +159,7 @@ public class testetorra {
 	
 	@After
 	public void encerrarDriver() {
-		//driver.close();
-		//driver.quit();
+		driver.close();
+		driver.quit();
 	}
 }
